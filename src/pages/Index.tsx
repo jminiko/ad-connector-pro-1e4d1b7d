@@ -3,13 +3,17 @@ import JobCard from "@/components/JobCard";
 import ResumeUpload from "@/components/ResumeUpload";
 import { calculateMatch, mockJobs, type Job } from "@/lib/matchingAlgorithm";
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import { generateBootstrapHtml, downloadHtmlFile } from "@/lib/exportUtils";
+import { Download } from "lucide-react";
 
 const Index = () => {
   const [matches, setMatches] = useState<Array<{ job: Job; match: number }>>([]);
+  const [resumeText, setResumeText] = useState("");
   const { toast } = useToast();
 
-  const handleResumeSubmit = (resumeText: string) => {
-    if (resumeText.trim().length < 50) {
+  const handleResumeSubmit = (text: string) => {
+    if (text.trim().length < 50) {
       toast({
         title: "Resume too short",
         description: "Please provide more details in your resume for better matching.",
@@ -18,16 +22,38 @@ const Index = () => {
       return;
     }
 
-    const jobMatches = mockJobs.map(job => ({
-      job,
-      match: calculateMatch(resumeText, job)
-    })).sort((a, b) => b.match - a.match);
+    setResumeText(text);
+    const jobMatches = mockJobs
+      .map((job) => ({
+        job,
+        match: calculateMatch(text, job),
+      }))
+      .sort((a, b) => b.match - a.match);
 
     setMatches(jobMatches);
-    
+
     toast({
       title: "Resume analyzed!",
       description: "We've found some matching jobs for you.",
+    });
+  };
+
+  const handleExport = () => {
+    if (matches.length === 0) {
+      toast({
+        title: "No matches to export",
+        description: "Please upload your resume first to find matching jobs.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const htmlContent = generateBootstrapHtml(matches, resumeText);
+    downloadHtmlFile(htmlContent);
+
+    toast({
+      title: "Export successful",
+      description: "Your job matches have been exported to HTML.",
     });
   };
 
@@ -45,7 +71,13 @@ const Index = () => {
 
         {matches.length > 0 && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-semibold">Matching Jobs</h2>
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-semibold">Matching Jobs</h2>
+              <Button onClick={handleExport} className="flex items-center gap-2">
+                <Download className="w-4 h-4" />
+                Export to HTML
+              </Button>
+            </div>
             <div className="space-y-4">
               {matches.map(({ job, match }) => (
                 <JobCard key={job.id} job={job} matchPercentage={match} />
