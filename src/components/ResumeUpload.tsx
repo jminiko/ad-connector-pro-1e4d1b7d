@@ -1,7 +1,4 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ResumeUploadProps {
   onResumeSubmit: (text: string) => void;
@@ -16,24 +13,27 @@ const ResumeUpload = ({ onResumeSubmit }: ResumeUploadProps) => {
   };
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Upload Your Resume</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Textarea
-            placeholder="Paste your resume text here..."
-            className="min-h-[200px]"
-            value={resumeText}
-            onChange={(e) => setResumeText(e.target.value)}
-          />
-          <Button type="submit" className="w-full">
+    <div className="card">
+      <div className="card-header">
+        <h3 className="h5 mb-0">Upload Your Resume</h3>
+      </div>
+      <div className="card-body">
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <textarea
+              className="form-control"
+              placeholder="Paste your resume text here..."
+              style={{ minHeight: "200px" }}
+              value={resumeText}
+              onChange={(e) => setResumeText(e.target.value)}
+            />
+          </div>
+          <button type="submit" className="btn btn-primary w-100">
             Find Matching Jobs
-          </Button>
+          </button>
         </form>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

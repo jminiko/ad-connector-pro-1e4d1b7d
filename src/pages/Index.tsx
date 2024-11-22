@@ -58,44 +58,48 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container max-w-4xl mx-auto space-y-8">
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold text-primary">Resume Job Matcher</h1>
-          <p className="text-muted-foreground">
+    <div className="min-vh-100 bg-light py-5">
+      <div className="container">
+        <div className="text-center mb-5">
+          <h1 className="display-4 fw-bold text-primary">Resume Job Matcher</h1>
+          <p className="text-muted">
             Find the perfect job match for your skills and experience
           </p>
         </div>
 
-        <ResumeUpload onResumeSubmit={handleResumeSubmit} />
+        <div className="row justify-content-center">
+          <div className="col-lg-8">
+            <ResumeUpload onResumeSubmit={handleResumeSubmit} />
 
-        {matches.length > 0 && (
-          <div className="space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-semibold">Matching Jobs</h2>
-              <Button onClick={handleExport} className="flex items-center gap-2">
-                <Download className="w-4 h-4" />
-                Export to HTML
-              </Button>
-            </div>
-            <div className="space-y-4">
-              {matches.map(({ job, match }) => (
-                <JobCard key={job.id} job={job} matchPercentage={match} />
-              ))}
-            </div>
-          </div>
-        )}
+            {matches.length > 0 && (
+              <div className="mt-5">
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                  <h2 className="h3 mb-0">Matching Jobs</h2>
+                  <Button onClick={handleExport} className="d-flex align-items-center gap-2">
+                    <Download className="w-4 h-4" />
+                    Export to HTML
+                  </Button>
+                </div>
+                <div className="d-flex flex-column gap-4">
+                  {matches.map(({ job, match }) => (
+                    <JobCard key={job.id} job={job} matchPercentage={match} />
+                  ))}
+                </div>
+              </div>
+            )}
 
-        {matches.length === 0 && (
-          <div className="space-y-4">
-            <h2 className="text-2xl font-semibold">Available Jobs</h2>
-            <div className="space-y-4">
-              {mockJobs.map((job) => (
-                <JobCard key={job.id} job={job} />
-              ))}
-            </div>
+            {matches.length === 0 && (
+              <div className="mt-5">
+                <h2 className="h3 mb-4">Available Jobs</h2>
+                <div className="d-flex flex-column gap-4">
+                  {mockJobs.map((job) => (
+                    <JobCard key={job.id} job={job} />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
